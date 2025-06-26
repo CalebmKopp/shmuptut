@@ -28,9 +28,9 @@ function _update()
 	--	 (hard 30 fps always)
 	t+=1
 	--controls
- ship_speed_x=0
- ship_speed_y=0
- ship_sprite=36
+	ship_speed_x=0
+	ship_speed_y=0
+	ship_sprite=36
  
  --move left
 	if btn(0) then
@@ -115,7 +115,7 @@ function _draw()
 	-- the ship should always be
 	-- 	the last thing drawn
 	spr(ship_sprite, ship_pos_x, ship_pos_y)
- spr(boost_sprite, ship_pos_x, ship_pos_y+8)
+	spr(boost_sprite, ship_pos_x, ship_pos_y+8)
 	
 	-- conditionally drawn
 	-- draw bullet

@@ -2,8 +2,10 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 function _init()
-	-- this is called once at start
+	--this is called once at start
 	cls(0)
+
+	--making all these vars global
 	xship = 64
 	yship = 100
 	
@@ -18,8 +20,7 @@ function _init()
 	bully=-20
 	bullspd=5
 	bullspr=24
-	
-	muzzle=0
+	muzzle_state=0
 	
 	score=10000
 	lives=3
@@ -81,11 +82,6 @@ function _update()
 	boostspr+=1
 	if boostspr>10 then
 		boostspr=6
-	end
-
-	--animate muzzle flash
-	if muzzle>0 then
-		muzzle-=1
 	end
 
 	--wrap ship coord if hitting edge
@@ -199,7 +195,7 @@ function ani_bullets()
 		bully=yship-1
 		--play noise
 		sfx(1)
-		muzzle=4
+		muzzle_state=4
 	end
 	--change bullet y coord over time
 	-- subtract bullspd, per frame
@@ -209,17 +205,22 @@ function ani_bullets()
 	if bullspr>27 then
 		bullspr=24
 	end
+	--update muzzle_state
+	if muzzle_state>0 then
+		muzzle_state-=1
+	end
 end
 
 function drw_bullets()
-	-- draw bullet
+	--draw bullet
 	spr(bullspr, bullx, bully)
-	-- conditionally drawn muzzle
-	if muzzle>0 then
-		circfill(xship+3,yship-2,muzzle,7)
-		circfill(xship+4,yship-2,muzzle,7)
+	--conditionally draw flash
+	if muzzle_state>0 then
+		circfill(xship+3,yship-2,muzzle_state,7)
+		circfill(xship+4,yship-2,muzzle_state,7)
 	end
 end
+
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000
 00000000aa7aa7aa9979979988788788ee7ee7ee0000000000077000000770000007700000c77c0000077000000000000000000000000000008aa80000000000

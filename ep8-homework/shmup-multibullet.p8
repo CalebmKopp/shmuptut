@@ -22,8 +22,15 @@ function _init()
 	bully=-20
 	bullspd=5
 	bullspr=24
+	bullspr_lst={24,25,26,27}
 	muzzle_rad=0
 	
+	--init bullets offscreen
+	for i=1,bullcount do
+		add(bullx_lst, -20)
+		add(bully_lst, -20)
+	end
+
 	score=10000
 	lives=3
 	bombs=2

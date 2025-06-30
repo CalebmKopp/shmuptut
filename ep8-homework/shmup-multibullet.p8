@@ -18,17 +18,20 @@ function _init()
 	bullcount=3
 	bullx_lst={}
 	bully_lst={}
+	bullspr_lst={}
+	bullspr_enum={24,25,26,27}
 	bullx=-20
 	bully=-20
 	bullspd=5
-	bullspr=24
-	bullspr_lst={24,25,26,27}
+	bullspr=bullspr_enum[1]
+
 	muzzle_rad=0
 	
 	--init bullets offscreen
 	for i=1,bullcount do
 		add(bullx_lst, -20)
 		add(bully_lst, -20)
+		add(bullspr_lst, bullspr_enum[1])
 	end
 
 	score=10000
@@ -225,6 +228,7 @@ function drw_bullets()
 	spr(bullspr, bullx, bully)
 	for i=1,bullcount do
 		local b_spr=bullspr
+		spr(b_spr, bullx_lst[i], bully_lst[i])
 	end
 	--conditionally draw flash
 	if muzzle_rad>0 then

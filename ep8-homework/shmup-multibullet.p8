@@ -71,14 +71,6 @@ function _update()
 		yshipspd=2
 	end
 	
-	--shoot
-	if btnp(5) then
-		bullx=xship
-		bully=yship-1
-		sfx(1)
-		muzzle=4
-	end
-	
 	--change ship draw coords
 	xship = xship + xshipspd
 	yship = yship + yshipspd
@@ -124,12 +116,7 @@ function _draw()
 	spr(shipspr, xship, yship)
 	spr(boostspr, xship, yship+8)
 	
-	-- conditionally drawn
 	drw_bullets()
-	if muzzle>0 then
-		circfill(xship+3,yship-2,muzzle,7)
-		circfill(xship+4,yship-2,muzzle,7)
-	end
 	
 	-- health ui
 	print("score: "..score, 40,1,12)
@@ -204,18 +191,33 @@ function ani_starfield()
 	end
 end
 -->8
-function drw_bullets()
-	-- draw bullet
-	spr(bullspr, bullx, bully)
-end
-
 function ani_bullets()
-	--change bullet y coord
+	--shoot pushed
+	if btnp(5) then
+		--bullet start at ship pos
+		bullx=xship
+		bully=yship-1
+		--play noise
+		sfx(1)
+		muzzle=4
+	end
+	--change bullet y coord over time
+	-- subtract bullspd, per frame
 	bully=bully-bullspd
 	--change bullet sprite over time
 	bullspr+=1
 	if bullspr>27 then
 		bullspr=24
+	end
+end
+
+function drw_bullets()
+	-- draw bullet
+	spr(bullspr, bullx, bully)
+	-- conditionally drawn muzzle
+	if muzzle>0 then
+		circfill(xship+3,yship-2,muzzle,7)
+		circfill(xship+4,yship-2,muzzle,7)
 	end
 end
 __gfx__

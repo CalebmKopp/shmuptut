@@ -175,19 +175,23 @@ function starfield()
 		local toofast=false
 		
 		if speed > 1.9600 then
-			scolor=7
+			scolor=7 --white
 			toofast=true
 		elseif speed > 1.2 then
-			scolor=13
+			scolor=13 --light blue
 		elseif speed > 0.7 then
-			scolor=5
+			scolor=5 --blue
 		else
-			scolor=1
+			scolor=1 --dark blue
 		end
 		
+		-- if the star is too high of speed
+		--  draw a line instead of a pixel
 		if toofast then
+			-- draw a line
 			line(starx[i],stary[i],starx[i],stary[i]-3,scolor)
 		else
+			-- draw a pixel
 			pset(starx[i],stary[i],scolor)
 		end
 	end

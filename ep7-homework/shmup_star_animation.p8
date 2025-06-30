@@ -24,11 +24,12 @@ function _init()
 	lives=3
 	bombs=2
 	
+	starcount=10
 	starx={}
 	stary={}
 	starc={}
 	
-	for i=1,110 do
+	for i=1,starcount do
 		add(starx,flr(rnd(128)))
 		add(stary,flr(rnd(128)))
 		add(starc,flr(rnd(15))+1)
@@ -165,7 +166,12 @@ end
 function starfield()
 	
 	for i=1,#starx do
-		pset(starx[i],stary[i],starc[i])
+		staryoffset=t%128
+		print(stary[i]+staryoffset)
+		if (stary[i]+staryoffset > 127) then
+			stary[i]=0
+		end
+		pset(starx[i],stary[i]+staryoffset,starc[i])
 	end
 end
 __gfx__

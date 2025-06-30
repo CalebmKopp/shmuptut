@@ -23,7 +23,7 @@ function _init()
 	bullspr_enum={24,25,26,27}
 	bullx=-20
 	bully=-20
-	bullspd=5
+	bullspd=3.2
 	bullspr=bullspr_enum[1]
 
 	muzzle_rad=0
@@ -222,6 +222,10 @@ function ani_bullets()
 		bullspr_lst[bull_count] += 1
 		if bullspr_lst[bull_count]>27 then
 			bullspr_lst[bull_count]=24
+		end
+		if bully_lst[bull_count] < 2 then
+			bully_lst[bull_count] = -20
+			bull_count -= 1
 		end
 	end
 	--update muzzle_rad

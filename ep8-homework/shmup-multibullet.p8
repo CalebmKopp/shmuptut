@@ -13,6 +13,7 @@ function _init()
 	shipspr=36
 	boostspr=6
 	
+	bullcount=3
 	bullx=-20
 	bully=-20
 	bullspd=5
@@ -166,7 +167,8 @@ end
 
 -->8
 function drw_starfield()
-	for i=1,starcount do	
+	for i=1,starcount do
+		
 		--default color, should never
 		--	be rendered
 		local scolor=8
@@ -176,8 +178,10 @@ function drw_starfield()
 		if speed > 1.9600 then
 			scolor=7 --white
 			toofast=true
+		elseif speed > 1.7 then
+			scolor=6 --lightgrey
 		elseif speed > 1.2 then
-			scolor=13 --light blue
+			scolor=13 --lightblue
 		elseif speed > 0.7 then
 			scolor=5 --blue
 		else
@@ -214,7 +218,11 @@ function ani_starfield()
 end
 -->8
 function drw_bullets()
+	-- local b_spr=bullspr
+	-- for i=1,bullcount do
+	-- 	spr(b_spr, bullx[i], bully[i])
 
+	-- end
 end
 
 function ani_bullets()

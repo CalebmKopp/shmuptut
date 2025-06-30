@@ -83,9 +83,8 @@ function _update()
 	xship = xship + xshipspd
 	yship = yship + yshipspd
 	
-	--move the bullet
-	bully=bully-bullspd
-	
+	ani_bullets()
+
 	--animate flame
 	boostspr+=1
 	if boostspr>10 then
@@ -96,19 +95,8 @@ function _update()
 	if muzzle>0 then
 		muzzle-=1
 	end
-	
-	--animate bullet sprite
---	if (t%10) > 4 then
---		bullspr=26
---	else
---		bullspr=24
---	end
-	bullspr+=1
-	if bullspr>27 then
-		bullspr=24
-	end
 
-	--checking if we hit edge
+	--wrap ship coord if hitting edge
 	if xship > 120 then
 		xship=0
 	end
@@ -137,8 +125,7 @@ function _draw()
 	spr(boostspr, xship, yship+8)
 	
 	-- conditionally drawn
-	-- draw bullet
-	spr(bullspr, bullx, bully)
+	drw_bullets()
 	if muzzle>0 then
 		circfill(xship+3,yship-2,muzzle,7)
 		circfill(xship+4,yship-2,muzzle,7)
@@ -218,15 +205,18 @@ function ani_starfield()
 end
 -->8
 function drw_bullets()
-	-- local b_spr=bullspr
-	-- for i=1,bullcount do
-	-- 	spr(b_spr, bullx[i], bully[i])
-
-	-- end
+	-- draw bullet
+	spr(bullspr, bullx, bully)
 end
 
 function ani_bullets()
-
+	--change bullet y coord
+	bully=bully-bullspd
+	--change bullet sprite over time
+	bullspr+=1
+	if bullspr>27 then
+		bullspr=24
+	end
 end
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000

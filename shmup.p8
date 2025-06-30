@@ -167,7 +167,18 @@ end
 -->8
 function starfield()
 	for i=1,starcount do
-		pset(starx[i],stary[i],7)
+		local scolor=6
+		local speed=starspd[i]
+		if speed < 1.3333 then
+			scolor=13
+		end
+		if speed < 0.6666 then
+			scolor=1
+		end
+
+		
+		
+		pset(starx[i],stary[i],scolor)
 	end
 end
 

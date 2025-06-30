@@ -26,7 +26,6 @@ function _draw()
 		draw_game()
 	elseif mode=="start" then
 		draw_start()
-	end
 	elseif mode=="over" then
 		draw_over()
 	end
@@ -155,6 +154,11 @@ function update_game()
 		muzzle=4
 	end
 	
+	--todo: gameover temp button
+	if btnp(4) then
+		mode="over"
+	end
+	
 	--change ship draw coords
 	xship = xship + xshipspd
 	yship = yship + yshipspd
@@ -201,6 +205,13 @@ function update_start()
 		startgame()
 	end
 end
+
+function update_over()
+	if btnp(4) or btnp(5) then
+		mode="start"
+	end
+end
+
 -->8
 -- draw
 function draw_game()
@@ -246,6 +257,12 @@ function draw_start()
 	cls(1)
 	print("shmuck shmup",40,40,12)
 	print("press any key to start",20,80,7)
+end
+
+function draw_over()
+	cls(8)
+	print("game over",48,40,2)
+	print("press any key to continue",20,80,7)
 end
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000

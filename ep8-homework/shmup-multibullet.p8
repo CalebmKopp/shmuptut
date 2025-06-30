@@ -16,11 +16,13 @@ function _init()
 	boostspr=6
 	
 	bullcount=3
+	bullx_lst={}
+	bully_lst={}
 	bullx=-20
 	bully=-20
 	bullspd=5
 	bullspr=24
-	muzzle_state=0
+	muzzle_rad=0
 	
 	score=10000
 	lives=3
@@ -195,7 +197,7 @@ function ani_bullets()
 		bully=yship-1
 		--play noise
 		sfx(1)
-		muzzle_state=4
+		muzzle_rad=4
 	end
 	--change bullet y coord over time
 	-- subtract bullspd, per frame
@@ -205,19 +207,22 @@ function ani_bullets()
 	if bullspr>27 then
 		bullspr=24
 	end
-	--update muzzle_state
-	if muzzle_state>0 then
-		muzzle_state-=1
+	--update muzzle_rad
+	if muzzle_rad>0 then
+		muzzle_rad-=1
 	end
 end
 
 function drw_bullets()
 	--draw bullet
 	spr(bullspr, bullx, bully)
+	for i=1,bullcount do
+		local b_spr=bullspr
+	end
 	--conditionally draw flash
-	if muzzle_state>0 then
-		circfill(xship+3,yship-2,muzzle_state,7)
-		circfill(xship+4,yship-2,muzzle_state,7)
+	if muzzle_rad>0 then
+		circfill(xship+3,yship-2,muzzle_rad,7)
+		circfill(xship+4,yship-2,muzzle_rad,7)
 	end
 end
 

@@ -24,15 +24,14 @@ function _init()
 	lives=3
 	bombs=2
 	
-	starcount=111
 	starx={}
 	stary={}
-	starspd={}
+	starc={}
 	
-	for i=1,starcount do
+	for i=1,110 do
 		add(starx,flr(rnd(128)))
 		add(stary,flr(rnd(128)))
-		add(starspd,rnd(1.5)+0.5)
+		add(starc,flr(rnd(15))+1)
 	end
 	
 	t=0
@@ -120,8 +119,6 @@ function _update()
 	if yship < 0 then
 		yship=120
 	end
-	
-	animatestars()
 end
 
 function _draw()
@@ -166,36 +163,9 @@ end
 
 -->8
 function starfield()
-	for i=1,starcount do
-		local scolor=8
-		local speed=starspd[i]
-		
-		if speed > 1.3333 then
-			scolor=6
-		elseif speed > 0.6666 then
-			scolor=13
-		else
-			scolor=1
-		end
-		
-		pset(starx[i],stary[i],scolor)
-	end
-end
-
-function animatestars()
-	--for every star
-	for i=1,starcount do
-		local sy=stary[i]
-		--increment y coord by starspd
-		sy+=starspd[i]
-		--if it gets too high
-		if sy>128 then
-			--subtract 128, or set 0
-			sy = 0
-		end
-		--reassign to array, for draw
-		--	func to pull y coord
-		stary[i]=sy
+	
+	for i=1,#starx do
+		pset(starx[i],stary[i],starc[i])
 	end
 end
 __gfx__

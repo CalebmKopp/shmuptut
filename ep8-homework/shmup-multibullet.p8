@@ -167,18 +167,29 @@ end
 -->8
 function starfield()
 	for i=1,starcount do
+		
+		--default color, should never
+		--	be rendered
 		local scolor=8
 		local speed=starspd[i]
+		local toofast=false
 		
-		if speed > 1.3333 then
-			scolor=6
-		elseif speed > 0.6666 then
+		if speed > 1.9600 then
+			scolor=7
+			toofast=true
+		elseif speed > 1.2 then
 			scolor=13
+		elseif speed > 0.7 then
+			scolor=5
 		else
 			scolor=1
 		end
 		
-		pset(starx[i],stary[i],scolor)
+		if toofast then
+			line(starx[i],stary[i],starx[i],stary[i]-3,scolor)
+		else
+			pset(starx[i],stary[i],scolor)
+		end
 	end
 end
 

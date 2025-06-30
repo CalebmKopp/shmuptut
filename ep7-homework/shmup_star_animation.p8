@@ -7,7 +7,7 @@ function _init()
 	xship = 64
 	yship = 100
 	
-	xshipspd=0	
+	xshipspd=0
 	yshipspd=0
 	
 	shipspr=36
@@ -20,19 +20,20 @@ function _init()
 	
 	muzzle=0
 	
-	score=10000
+	score=flr(rnd(10000)+1)
 	lives=3
 	bombs=2
 	
-	starcount=111
+	starcount=100
+	starspeed=1
 	starx={}
 	stary={}
-	starspd={}
+	starc={}
 	
 	for i=1,starcount do
 		add(starx,flr(rnd(128)))
 		add(stary,flr(rnd(128)))
-		add(starspd,rnd(1.5)+0.5)
+		add(starc,flr(rnd(15))+1)
 	end
 	
 	t=0
@@ -120,8 +121,6 @@ function _update()
 	if yship < 0 then
 		yship=120
 	end
-	
-	animatestars()
 end
 
 function _draw()
@@ -146,6 +145,7 @@ function _draw()
 	-- health ui
 	print("score: "..score, 40,1,12)
 	
+	--draw lives
 	for i=1,4 do
 		if lives>=i then
 			spr(74,(i*9)-8,1)
@@ -154,6 +154,7 @@ function _draw()
 		end
 	end
 	
+	--draw bombs
 	for i=1,4 do
 		if bombs>=i then
 			spr(76,(i*9)+84,1)
@@ -166,36 +167,26 @@ end
 
 -->8
 function starfield()
+	--the full starcount is rendered
+	--	30 times per second
 	for i=1,starcount do
-		local scolor=8
-		local speed=starspd[i]
-		
-		if speed > 1.3333 then
-			scolor=6
-		elseif speed > 0.6666 then
-			scolor=13
-		else
-			scolor=1
+		--[[
+			the y coord of each star, changes per t%129
+			lets say stary[i] happens to be 0, top of screen
+			as time ticks on, we are adding that time 
+			to the y coord. this makes it so that we take
+			the initially randomized y coord, and dynamically
+			render it lower, on the next frame.
+		]]--
+		starydraw=stary[i]+t%129
+		-- if the y coord is ever, off the screen
+		if starydraw > 128 then
+			-- we can subtract 128 to keep it on screen
+			starydraw -=128
 		end
-		
-		pset(starx[i],stary[i],scolor)
-	end
-end
-
-function animatestars()
-	--for every star
-	for i=1,starcount do
-		local sy=stary[i]
-		--increment y coord by starspd
-		sy+=starspd[i]
-		--if it gets too high
-		if sy>128 then
-			--subtract 128, or set 0
-			sy = 0
-		end
-		--reassign to array, for draw
-		--	func to pull y coord
-		stary[i]=sy
+		--then render the individual star, as many times
+		--	as the starcount calls for
+		pset(starx[i],starydraw,starc[i])
 	end
 end
 __gfx__

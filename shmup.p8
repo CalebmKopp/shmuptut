@@ -132,6 +132,7 @@ function _draw()
 	-- health ui
 	print("score: "..score, 40,1,12)
 	
+	--adding health display
 	for i=1,4 do
 		if lives>=i then
 			spr(74,(i*9)-8,1)
@@ -140,6 +141,7 @@ function _draw()
 		end
 	end
 	
+	-- adding bomb display
 	for i=1,4 do
 		if lives>=i then
 			spr(76,(i*9)+84,1)

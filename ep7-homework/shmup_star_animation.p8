@@ -7,7 +7,7 @@ function _init()
 	xship = 64
 	yship = 100
 	
-	xshipspd=0	
+	xshipspd=0
 	yshipspd=0
 	
 	shipspr=36
@@ -20,11 +20,12 @@ function _init()
 	
 	muzzle=0
 	
-	score=10000
+	score=flr(rnd(10000)+1)
 	lives=3
 	bombs=2
 	
-	starcount=10
+	starcount=100
+	starspeed=1
 	starx={}
 	stary={}
 	starc={}
@@ -144,6 +145,7 @@ function _draw()
 	-- health ui
 	print("score: "..score, 40,1,12)
 	
+	--draw lives
 	for i=1,4 do
 		if lives>=i then
 			spr(74,(i*9)-8,1)
@@ -152,6 +154,7 @@ function _draw()
 		end
 	end
 	
+	--draw bombs
 	for i=1,4 do
 		if bombs>=i then
 			spr(76,(i*9)+84,1)
@@ -164,14 +167,26 @@ end
 
 -->8
 function starfield()
-	
-	for i=1,#starx do
-		staryoffset=t%128
-		print(stary[i]+staryoffset)
-		if (stary[i]+staryoffset > 127) then
-			stary[i]=0
+	--the full starcount is rendered
+	--	30 times per second
+	for i=1,starcount do
+		--[[
+			the y coord of each star, changes per t%129
+			lets say stary[i] happens to be 0, top of screen
+			as time ticks on, we are adding that time 
+			to the y coord. this makes it so that we take
+			the initially randomized y coord, and dynamically
+			render it lower, on the next frame.
+		]]--
+		starydraw=stary[i]+t%129
+		-- if the y coord is ever, off the screen
+		if starydraw > 128 then
+			-- we can subtract 128 to keep it on screen
+			starydraw -=128
 		end
-		pset(starx[i],stary[i]+staryoffset,starc[i])
+		--then render the individual star, as many times
+		--	as the starcount calls for
+		pset(starx[i],starydraw,starc[i])
 	end
 end
 __gfx__

@@ -15,7 +15,8 @@ function _init()
 	shipspr=36
 	boostspr=6
 	
-	bullcount=3
+	bull_count=0
+	bull_max=3
 	bullx_lst={}
 	bully_lst={}
 	bullspr_lst={}
@@ -28,7 +29,7 @@ function _init()
 	muzzle_rad=0
 	
 	--init bullets offscreen
-	for i=1,bullcount do
+	for i=1,bull_max do
 		add(bullx_lst, -20)
 		add(bully_lst, -20)
 		add(bullspr_lst, bullspr_enum[1])
@@ -202,20 +203,26 @@ end
 function ani_bullets()
 	--shoot pushed
 	if btnp(5) then
+		bull_count+=1
+		if bull_count > 3 then
+			bull_count=1
+		end
 		--bullet start at ship pos
-		bullx=xship
-		bully=yship-1
+		bullx_lst[bull_count]=xship
+		bully_lst[bull_count]=yship-1
 		--play noise
 		sfx(1)
 		muzzle_rad=4
 	end
-	--change bullet y coord over time
-	-- subtract bullspd, per frame
-	bully=bully-bullspd
-	--change bullet sprite over time
-	bullspr+=1
-	if bullspr>27 then
-		bullspr=24
+	if bull_count > 0 then
+		--change bullet y coord over time
+		-- subtract bullspd, per frame
+		bully_lst[bull_count] -= bullspd
+		--change bullet sprite over time
+		bullspr_lst[bull_count] += 1
+		if bullspr_lst[bull_count]>27 then
+			bullspr_lst[bull_count]=24
+		end
 	end
 	--update muzzle_rad
 	if muzzle_rad>0 then
@@ -226,9 +233,8 @@ end
 function drw_bullets()
 	--draw bullet
 	spr(bullspr, bullx, bully)
-	for i=1,bullcount do
-		local b_spr=bullspr
-		spr(b_spr, bullx_lst[i], bully_lst[i])
+	for i=1,bull_max do
+		spr(bullspr_lst[i], bullx_lst[i], bully_lst[i])
 	end
 	--conditionally draw flash
 	if muzzle_rad>0 then

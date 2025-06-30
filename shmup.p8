@@ -121,7 +121,7 @@ function _update()
 		yship=120
 	end
 	
-	animatestars()
+	ani_stars()
 end
 
 function _draw()
@@ -129,7 +129,7 @@ function _draw()
 	--  drawn to the screen
 	--  (30 fps attempted)
 	cls(0)
-	starfield()
+	drw_stars()
 	-- the ship should always be
 	-- 	the last thing drawn
 	spr(shipspr, xship, yship)
@@ -165,24 +165,41 @@ function _draw()
 end
 
 -->8
-function starfield()
+function drw_stars()
 	for i=1,starcount do
+		
+		--default color, should never
+		--	be rendered
 		local scolor=8
 		local speed=starspd[i]
+		local toofast=false
 		
-		if speed > 1.3333 then
-			scolor=6
-		elseif speed > 0.6666 then
-			scolor=13
+		if speed > 1.9600 then
+			scolor=7 --white
+			toofast=true
+		elseif speed > 1.7 then
+			scolor=6 --lightgrey
+		elseif speed > 1.2 then
+			scolor=13 --lightblue
+		elseif speed > 0.7 then
+			scolor=5 --blue
 		else
-			scolor=1
+			scolor=1 --dark blue
 		end
 		
-		pset(starx[i],stary[i],scolor)
+		-- if the star is too high of speed
+		--  draw a line instead of a pixel
+		if toofast then
+			-- draw a line
+			line(starx[i],stary[i],starx[i],stary[i]-3,scolor)
+		else
+			-- draw a pixel
+			pset(starx[i],stary[i],scolor)
+		end
 	end
 end
 
-function animatestars()
+function ani_stars()
 	--for every star
 	for i=1,starcount do
 		local sy=stary[i]

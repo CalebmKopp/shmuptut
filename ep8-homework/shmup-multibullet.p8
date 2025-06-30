@@ -111,7 +111,7 @@ function _update()
 		yship=120
 	end
 	
-	ani_starfield()
+	ani_stars()
 end
 
 function _draw()
@@ -119,7 +119,7 @@ function _draw()
 	--  drawn to the screen
 	--  (30 fps attempted)
 	cls(0)
-	drw_starfield()
+	drw_stars()
 	-- the ship should always be
 	-- 	the last thing drawn
 	spr(shipspr, xship, yship)
@@ -149,7 +149,7 @@ function _draw()
 end
 
 -->8
-function drw_starfield()
+function drw_stars()
 	for i=1,starcount do
 		
 		--default color, should never
@@ -183,7 +183,7 @@ function drw_starfield()
 	end
 end
 
-function ani_starfield()
+function ani_stars()
 	--for every star
 	for i=1,starcount do
 		local sy=stary[i]

@@ -163,7 +163,7 @@ end
 function starfield()
 	
 	for i=1,#starx do
-		rand_color=flr(rnd(14))+1
+		rand_color=flr(rnd(15))+1
 		pset(starx[i],stary[i],rand_color)
 	end
 end

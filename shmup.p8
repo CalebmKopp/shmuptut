@@ -15,7 +15,7 @@ function _init()
 	
 	bullx=-20
 	bully=-20
-	bullspd=5
+	bullspd=3.5
 	bullspr=24
 	
 	muzzle=0
@@ -24,7 +24,7 @@ function _init()
 	lives=3
 	bombs=2
 	
-	starcount=111
+	starcount=184
 	starx={}
 	stary={}
 	starspd={}
@@ -34,7 +34,7 @@ function _init()
 		add(stary,flr(rnd(128)))
 		add(starspd,rnd(1.5)+0.5)
 	end
-	
+	mode="game"
 	t=0
 end
 
@@ -42,6 +42,75 @@ function _update()
 	-- update is for gameplay
 	--	 (hard 30 fps always)
 	t+=1
+	if mode=="game" then
+		update_game()
+	elseif mode=="start" then
+		--render start screen
+	end
+end
+
+function _draw()
+	if mode=="game" then
+		draw_game()
+	elseif mode=="start" then
+		--render start screen
+	end
+
+end
+
+-->8
+function drw_stars()
+	for i=1,starcount do
+		--default color, should never
+		--	be rendered
+		local scolor=8
+		local speed=starspd[i]
+		local toofast=false
+		
+		if speed > 1.9600 then
+			scolor=7 --white
+			toofast=true
+		elseif speed > 1.7 then
+			scolor=6 --lightgrey
+		elseif speed > 1.2 then
+			scolor=13 --lightblue
+		elseif speed > 0.7 then
+			scolor=5 --blue
+		else
+			scolor=1 --dark blue
+		end
+		
+		-- if the star is too high of speed
+		--  draw a line instead of a pixel
+		if toofast then
+			-- draw a line
+			line(starx[i],stary[i],starx[i],stary[i]-3,scolor)
+		else
+			-- draw a pixel
+			pset(starx[i],stary[i],scolor)
+		end
+	end
+end
+
+function ani_stars()
+	--for every star
+	for i=1,starcount do
+		local sy=stary[i]
+		--increment y coord by starspd
+		sy+=starspd[i]
+		--if it gets too high
+		if sy>128 then
+			--subtract 128, or set 0
+			sy = 0
+		end
+		--reassign to array, for draw
+		--	func to pull y coord
+		stary[i]=sy
+	end
+end
+-->8
+--update
+function update_game()
 	--controls
 	xshipspd=0
 	yshipspd=0
@@ -96,12 +165,7 @@ function _update()
 		muzzle-=1
 	end
 	
-	--animate bullet sprite
---	if (t%10) > 4 then
---		bullspr=26
---	else
---		bullspr=24
---	end
+	--change bullspr over time
 	bullspr+=1
 	if bullspr>27 then
 		bullspr=24
@@ -123,9 +187,10 @@ function _update()
 	
 	ani_stars()
 end
-
-function _draw()
-	-- draw is called when a frame
+-->8
+-- draw
+function draw_game()
+-- draw is called when a frame
 	--  drawn to the screen
 	--  (30 fps attempted)
 	cls(0)
@@ -160,59 +225,6 @@ function _draw()
 		else
 			spr(93,(i*9)+84,1)
 		end
-	end
-
-end
-
--->8
-function drw_stars()
-	for i=1,starcount do
-		
-		--default color, should never
-		--	be rendered
-		local scolor=8
-		local speed=starspd[i]
-		local toofast=false
-		
-		if speed > 1.9600 then
-			scolor=7 --white
-			toofast=true
-		elseif speed > 1.7 then
-			scolor=6 --lightgrey
-		elseif speed > 1.2 then
-			scolor=13 --lightblue
-		elseif speed > 0.7 then
-			scolor=5 --blue
-		else
-			scolor=1 --dark blue
-		end
-		
-		-- if the star is too high of speed
-		--  draw a line instead of a pixel
-		if toofast then
-			-- draw a line
-			line(starx[i],stary[i],starx[i],stary[i]-3,scolor)
-		else
-			-- draw a pixel
-			pset(starx[i],stary[i],scolor)
-		end
-	end
-end
-
-function ani_stars()
-	--for every star
-	for i=1,starcount do
-		local sy=stary[i]
-		--increment y coord by starspd
-		sy+=starspd[i]
-		--if it gets too high
-		if sy>128 then
-			--subtract 128, or set 0
-			sy = 0
-		end
-		--reassign to array, for draw
-		--	func to pull y coord
-		stary[i]=sy
 	end
 end
 __gfx__

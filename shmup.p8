@@ -1,15 +1,44 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+--main
 function _init()
 	-- this is called once at start
 	cls(0)
+	t=0
+	mode="start"
+end
+
+function _update()
+	-- update is for gameplay
+	--	 (hard 30 fps always)
+	if mode=="game" then
+		update_game()
+	elseif mode=="start" then
+		update_start()
+	elseif mode=="over" then
+		update_over()
+	end
+end
+
+function _draw()
+	if mode=="game" then
+		draw_game()
+	elseif mode=="start" then
+		draw_start()
+	end
+	elseif mode=="over" then
+		draw_over()
+	end
+end
+
+function startgame()
+	mode='game'
 	xship = 64
 	yship = 100
 	
 	xshipspd=0	
 	yshipspd=0
-	
 	shipspr=36
 	boostspr=6
 	
@@ -34,31 +63,9 @@ function _init()
 		add(stary,flr(rnd(128)))
 		add(starspd,rnd(1.5)+0.5)
 	end
-	mode="game"
-	t=0
 end
-
-function _update()
-	-- update is for gameplay
-	--	 (hard 30 fps always)
-	t+=1
-	if mode=="game" then
-		update_game()
-	elseif mode=="start" then
-		--render start screen
-	end
-end
-
-function _draw()
-	if mode=="game" then
-		draw_game()
-	elseif mode=="start" then
-		--render start screen
-	end
-
-end
-
 -->8
+-- stars
 function drw_stars()
 	for i=1,starcount do
 		--default color, should never
@@ -109,8 +116,9 @@ function ani_stars()
 	end
 end
 -->8
---update
+-- update
 function update_game()
+	t+=1
 	--controls
 	xshipspd=0
 	yshipspd=0
@@ -187,6 +195,12 @@ function update_game()
 	
 	ani_stars()
 end
+
+function update_start()
+	if btnp(4) or btnp(5) then
+		startgame()
+	end
+end
 -->8
 -- draw
 function draw_game()
@@ -226,6 +240,12 @@ function draw_game()
 			spr(93,(i*9)+84,1)
 		end
 	end
+end
+
+function draw_start()
+	cls(1)
+	print("shmuck shmup",40,40,12)
+	print("press any key to start",20,80,7)
 end
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000

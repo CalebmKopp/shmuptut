@@ -121,7 +121,7 @@ function _update()
 		yship=120
 	end
 	
-	animatestars()
+	ani_starfield()
 end
 
 function _draw()
@@ -129,7 +129,7 @@ function _draw()
 	--  drawn to the screen
 	--  (30 fps attempted)
 	cls(0)
-	starfield()
+	drw_starfield()
 	-- the ship should always be
 	-- 	the last thing drawn
 	spr(shipspr, xship, yship)
@@ -165,9 +165,8 @@ function _draw()
 end
 
 -->8
-function starfield()
-	for i=1,starcount do
-		
+function drw_starfield()
+	for i=1,starcount do	
 		--default color, should never
 		--	be rendered
 		local scolor=8
@@ -197,7 +196,7 @@ function starfield()
 	end
 end
 
-function animatestars()
+function ani_starfield()
 	--for every star
 	for i=1,starcount do
 		local sy=stary[i]
@@ -212,6 +211,14 @@ function animatestars()
 		--	func to pull y coord
 		stary[i]=sy
 	end
+end
+-->8
+function drw_bullets()
+
+end
+
+function ani_bullets()
+
 end
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000

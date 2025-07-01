@@ -6,6 +6,7 @@ function _init()
 	-- this is called once at start
 	cls(0)
 	t=0
+	levelt = 0
 	mode="start"
 	start_levelcount()
 	start_stars()
@@ -129,7 +130,7 @@ function ani_stars()
 end
 
 function blink()
-	local blink_cols={7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,}
+	local blink_cols={10,10,10,10,10,10,10,10,10,10,10,10,10,7,7,7,7,7,7,7,7,7,13,13,13,13,13,13,13,13,13,13}
 	return blink_cols[t%#blink_cols+1]
 end	
 -->8
@@ -225,7 +226,8 @@ end
 
 function update_level()
 	ani_stars()
-	if t>121 then
+	levelt+=1
+	if levelt>121 then
 		startgame()
 	end
 end

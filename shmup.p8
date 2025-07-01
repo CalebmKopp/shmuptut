@@ -1,21 +1,56 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
+-- main
 function _init()
 	-- this is called once at start
 	cls(0)
+	t=0
+	mode="start"
+	start_levelcount()
+	start_stars()
+end
+
+function _update()
+	-- update is for gameplay
+	--	 (hard 30 fps always)
+	t+=1
+	if mode=="game" then
+		update_game()
+	elseif mode=="start" then
+		update_start()
+	elseif mode=="level" then
+		update_level()
+	elseif mode=="over" then
+		update_over()
+	end
+end
+
+function _draw()
+	if mode=="game" then
+		draw_game()
+	elseif mode=="start" then
+		draw_start()
+	elseif mode=="level" then
+		draw_level()
+	elseif mode=="over" then
+		draw_over()
+	end
+end
+
+function startgame()
+	mode='game'
 	xship = 64
 	yship = 100
 	
 	xshipspd=0	
 	yshipspd=0
-	
 	shipspr=36
 	boostspr=6
 	
 	bullx=-20
 	bully=-20
-	bullspd=5
+	bullspd=3.5
 	bullspr=24
 	
 	muzzle=0
@@ -24,7 +59,16 @@ function _init()
 	lives=3
 	bombs=2
 	
-	starcount=111
+	start_stars()
+end
+-->8
+-- helpers
+function start_levelcount()
+	levelt=0
+	curr_level=1
+end
+function start_stars()
+	starcount=184
 	starx={}
 	stary={}
 	starspd={}
@@ -34,14 +78,66 @@ function _init()
 		add(stary,flr(rnd(128)))
 		add(starspd,rnd(1.5)+0.5)
 	end
-	
-	t=0
+end
+function drw_stars(star_cols)
+	star_cols = star_cols or {7,6,13,5,1}
+	for i=1,starcount do
+		--default color, should never
+		--	be rendered
+		local scolor=8
+		local speed=starspd[i]
+		local toofast=false
+		
+		if speed > 1.9600 then
+			scolor=star_cols[1] --white
+			toofast=true
+		elseif speed > 1.7 then
+			scolor=star_cols[2] --lightgrey
+		elseif speed > 1.2 then
+			scolor=star_cols[3] --lightblue
+		elseif speed > 0.7 then
+			scolor=star_cols[4] --blue
+		else
+			scolor=star_cols[5] --dark blue
+		end
+		
+		-- if the star is too high of speed
+		--  draw a line instead of a pixel
+		if toofast then
+			-- draw a line
+			line(starx[i],stary[i],starx[i],stary[i]-3,scolor)
+		else
+			-- draw a pixel
+			pset(starx[i],stary[i],scolor)
+		end
+	end
 end
 
-function _update()
-	-- update is for gameplay
-	--	 (hard 30 fps always)
-	t+=1
+function ani_stars(spd_mod)
+	spd_mod = spd_mod or 1
+	--for every star
+	for i=1,starcount do
+		local sy=stary[i]
+		--increment y coord by starspd
+		sy+=(starspd[i]*spd_mod)
+		--if it gets too high
+		if sy>128 then
+			--subtract 128, or set 0
+			sy = 0
+		end
+		--reassign to array, for draw
+		--	func to pull y coord
+		stary[i]=sy
+	end
+end
+
+function blink(blink_cols)
+	blink_cols=blink_cols or{10,10,10,10,10,10,10,10,10,10,10,10,10,7,7,7,7,7,7,7,7,7,13,13,13,13,13,13,13,13,13,13}
+	return blink_cols[t%#blink_cols+1]
+end	
+-->8
+-- update
+function update_game()
 	--controls
 	xshipspd=0
 	yshipspd=0
@@ -78,6 +174,11 @@ function _update()
 		muzzle=4
 	end
 	
+	--todo: gameover temp button
+	if btnp(4) then
+		mode="over"
+	end
+	
 	--change ship draw coords
 	xship = xship + xshipspd
 	yship = yship + yshipspd
@@ -96,12 +197,7 @@ function _update()
 		muzzle-=1
 	end
 	
-	--animate bullet sprite
---	if (t%10) > 4 then
---		bullspr=26
---	else
---		bullspr=24
---	end
+	--change bullspr over time
 	bullspr+=1
 	if bullspr>27 then
 		bullspr=24
@@ -121,15 +217,41 @@ function _update()
 		yship=120
 	end
 	
-	animatestars()
+	ani_stars()
 end
 
-function _draw()
-	-- draw is called when a frame
+function update_start()
+	ani_stars(0.3)
+	if btnp(4) or btnp(5) then
+		mode="level"
+	end
+end
+
+function update_level()
+	ani_stars(0.75)
+	levelt+=1
+	if levelt>91 then
+		startgame()
+	end
+end
+
+function update_over()
+	ani_stars(-0.8)
+	if btnp(4) or btnp(5) then
+		mode="start"
+		start_levelcount()
+		start_stars()
+	end
+end
+
+-->8
+-- draw
+function draw_game()
+-- draw is called when a frame
 	--  drawn to the screen
 	--  (30 fps attempted)
 	cls(0)
-	starfield()
+	drw_stars()
 	-- the ship should always be
 	-- 	the last thing drawn
 	spr(shipspr, xship, yship)
@@ -161,42 +283,26 @@ function _draw()
 			spr(93,(i*9)+84,1)
 		end
 	end
-
 end
 
--->8
-function starfield()
-	for i=1,starcount do
-		local scolor=8
-		local speed=starspd[i]
-		
-		if speed > 1.3333 then
-			scolor=6
-		elseif speed > 0.6666 then
-			scolor=13
-		else
-			scolor=1
-		end
-		
-		pset(starx[i],stary[i],scolor)
-	end
+function draw_start()
+	cls(1)
+	drw_stars()
+	print("shmuck shmup",40,40,12)
+	print("press any key to start",20,80,blink())
 end
 
-function animatestars()
-	--for every star
-	for i=1,starcount do
-		local sy=stary[i]
-		--increment y coord by starspd
-		sy+=starspd[i]
-		--if it gets too high
-		if sy>128 then
-			--subtract 128, or set 0
-			sy = 0
-		end
-		--reassign to array, for draw
-		--	func to pull y coord
-		stary[i]=sy
-	end
+function draw_level()
+	cls(0)
+	drw_stars()
+	print("level: "..curr_level,45,42,blink())
+end
+
+function draw_over()
+	cls(13)
+	drw_stars{15,14,12,11,10}
+	print("game over",48,40,15)
+	print("press any key to continue",15,80,blink{15,15,15,15,15,15,14,14,14,14,14,14,12,12,12,12,12,12,11,11,11,11,11,11,10,10,10,10,10,10})
 end
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000

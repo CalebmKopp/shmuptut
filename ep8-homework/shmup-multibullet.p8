@@ -2,8 +2,10 @@ pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
 function _init()
-	-- this is called once at start
+	--this is called once at start
 	cls(0)
+
+	--making all these vars global
 	xship = 64
 	yship = 100
 	
@@ -13,13 +15,26 @@ function _init()
 	shipspr=36
 	boostspr=6
 	
+	bull_count=0
+	bull_max=3
+	bullx_lst={}
+	bully_lst={}
+	bullspr_lst={}
+	bullspr_enum={24,25,26,27}
 	bullx=-20
 	bully=-20
-	bullspd=5
-	bullspr=24
+	bullspd=3.2
+	bullspr=bullspr_enum[1]
+
+	muzzle_rad=0
 	
-	muzzle=0
-	
+	--init bullets offscreen
+	for i=1,bull_max do
+		add(bullx_lst, -20)
+		add(bully_lst, -20)
+		add(bullspr_lst, bullspr_enum[1])
+	end
+
 	score=10000
 	lives=3
 	bombs=2
@@ -70,44 +85,19 @@ function _update()
 		yshipspd=2
 	end
 	
-	--shoot
-	if btnp(5) then
-		bullx=xship
-		bully=yship-1
-		sfx(1)
-		muzzle=4
-	end
-	
 	--change ship draw coords
 	xship = xship + xshipspd
 	yship = yship + yshipspd
 	
-	--move the bullet
-	bully=bully-bullspd
-	
+	ani_bullets()
+
 	--animate flame
 	boostspr+=1
 	if boostspr>10 then
 		boostspr=6
 	end
 
-	--animate muzzle flash
-	if muzzle>0 then
-		muzzle-=1
-	end
-	
-	--animate bullet sprite
---	if (t%10) > 4 then
---		bullspr=26
---	else
---		bullspr=24
---	end
-	bullspr+=1
-	if bullspr>27 then
-		bullspr=24
-	end
-
-	--checking if we hit edge
+	--wrap ship coord if hitting edge
 	if xship > 120 then
 		xship=0
 	end
@@ -121,7 +111,7 @@ function _update()
 		yship=120
 	end
 	
-	animatestars()
+	ani_stars()
 end
 
 function _draw()
@@ -129,19 +119,13 @@ function _draw()
 	--  drawn to the screen
 	--  (30 fps attempted)
 	cls(0)
-	starfield()
+	drw_stars()
 	-- the ship should always be
 	-- 	the last thing drawn
 	spr(shipspr, xship, yship)
 	spr(boostspr, xship, yship+8)
 	
-	-- conditionally drawn
-	-- draw bullet
-	spr(bullspr, bullx, bully)
-	if muzzle>0 then
-		circfill(xship+3,yship-2,muzzle,7)
-		circfill(xship+4,yship-2,muzzle,7)
-	end
+	drw_bullets()
 	
 	-- health ui
 	print("score: "..score, 40,1,12)
@@ -165,7 +149,7 @@ function _draw()
 end
 
 -->8
-function starfield()
+function drw_stars()
 	for i=1,starcount do
 		
 		--default color, should never
@@ -175,25 +159,31 @@ function starfield()
 		local toofast=false
 		
 		if speed > 1.9600 then
-			scolor=7
+			scolor=7 --white
 			toofast=true
+		elseif speed > 1.7 then
+			scolor=6 --lightgrey
 		elseif speed > 1.2 then
-			scolor=13
+			scolor=13 --lightblue
 		elseif speed > 0.7 then
-			scolor=5
+			scolor=5 --blue
 		else
-			scolor=1
+			scolor=1 --dark blue
 		end
 		
+		-- if the star is too high of speed
+		--  draw a line instead of a pixel
 		if toofast then
+			-- draw a line
 			line(starx[i],stary[i],starx[i],stary[i]-3,scolor)
 		else
+			-- draw a pixel
 			pset(starx[i],stary[i],scolor)
 		end
 	end
 end
 
-function animatestars()
+function ani_stars()
 	--for every star
 	for i=1,starcount do
 		local sy=stary[i]
@@ -209,6 +199,54 @@ function animatestars()
 		stary[i]=sy
 	end
 end
+-->8
+function ani_bullets()
+	--shoot pushed
+	if btnp(5) then
+		bull_count+=1
+		if bull_count > 3 then
+			bull_count=1
+		end
+		--bullet start at ship pos
+		bullx_lst[bull_count]=xship
+		bully_lst[bull_count]=yship-1
+		--play noise
+		sfx(1)
+		muzzle_rad=4
+	end
+	if bull_count > 0 then
+		--change bullet y coord over time
+		-- subtract bullspd, per frame
+		bully_lst[bull_count] -= bullspd
+		--change bullet sprite over time
+		bullspr_lst[bull_count] += 1
+		if bullspr_lst[bull_count]>27 then
+			bullspr_lst[bull_count]=24
+		end
+		if bully_lst[bull_count] < 2 then
+			bully_lst[bull_count] = -20
+			bull_count -= 1
+		end
+	end
+	--update muzzle_rad
+	if muzzle_rad>0 then
+		muzzle_rad-=1
+	end
+end
+
+function drw_bullets()
+	--draw bullet
+	spr(bullspr, bullx, bully)
+	for i=1,bull_max do
+		spr(bullspr_lst[i], bullx_lst[i], bully_lst[i])
+	end
+	--conditionally draw flash
+	if muzzle_rad>0 then
+		circfill(xship+3,yship-2,muzzle_rad,7)
+		circfill(xship+4,yship-2,muzzle_rad,7)
+	end
+end
+
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000
 00000000aa7aa7aa9979979988788788ee7ee7ee0000000000077000000770000007700000c77c0000077000000000000000000000000000008aa80000000000

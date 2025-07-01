@@ -58,8 +58,6 @@ function startgame()
 	score=10000
 	lives=3
 	bombs=2
-	
-	start_stars()
 end
 -->8
 -- helpers
@@ -138,12 +136,13 @@ end
 -->8
 -- update
 function update_game()
+	ani_stars()
 	--controls
 	xshipspd=0
 	yshipspd=0
 	shipspr=36
  
- --move left
+	--move left
 	if btn(0) then
 		shipspr=52
 		xshipspd=-2
@@ -217,7 +216,6 @@ function update_game()
 		yship=120
 	end
 	
-	ani_stars()
 end
 
 function update_start()

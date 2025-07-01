@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 42
 __lua__
---main
+-- main
 function _init()
 	-- this is called once at start
 	cls(0)
@@ -267,7 +267,7 @@ end
 function draw_over()
 	cls(8)
 	print("game over",48,40,2)
-	print("press any key to continue",20,80,7)
+	print("press any key to continue",15,80,blink())
 end
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000

@@ -79,7 +79,8 @@ function start_stars()
 		add(starspd,rnd(1.5)+0.5)
 	end
 end
-function drw_stars()
+function drw_stars(star_cols)
+	star_cols = star_cols or {7,6,13,5,1}
 	for i=1,starcount do
 		--default color, should never
 		--	be rendered
@@ -88,16 +89,16 @@ function drw_stars()
 		local toofast=false
 		
 		if speed > 1.9600 then
-			scolor=7 --white
+			scolor=star_cols[1] --white
 			toofast=true
 		elseif speed > 1.7 then
-			scolor=6 --lightgrey
+			scolor=star_cols[2] --lightgrey
 		elseif speed > 1.2 then
-			scolor=13 --lightblue
+			scolor=star_cols[3] --lightblue
 		elseif speed > 0.7 then
-			scolor=5 --blue
+			scolor=star_cols[4] --blue
 		else
-			scolor=1 --dark blue
+			scolor=star_cols[5] --dark blue
 		end
 		
 		-- if the star is too high of speed
@@ -130,8 +131,8 @@ function ani_stars(spd_mod)
 	end
 end
 
-function blink()
-	local blink_cols={10,10,10,10,10,10,10,10,10,10,10,10,10,7,7,7,7,7,7,7,7,7,13,13,13,13,13,13,13,13,13,13}
+function blink(blink_cols)
+	blink_cols=blink_cols or{10,10,10,10,10,10,10,10,10,10,10,10,10,7,7,7,7,7,7,7,7,7,13,13,13,13,13,13,13,13,13,13}
 	return blink_cols[t%#blink_cols+1]
 end	
 -->8
@@ -229,7 +230,7 @@ end
 function update_level()
 	ani_stars(0.75)
 	levelt+=1
-	if levelt>121 then
+	if levelt>91 then
 		startgame()
 	end
 end
@@ -298,10 +299,10 @@ function draw_level()
 end
 
 function draw_over()
-	cls(15)
-	drw_stars()
-	print("game over",48,40,2)
-	print("press any key to continue",15,80,blink())
+	cls(13)
+	drw_stars{15,14,12,11,10}
+	print("game over",48,40,15)
+	print("press any key to continue",15,80,blink{15,15,15,15,15,15,14,14,14,14,14,14,12,12,12,12,12,12,11,11,11,11,11,11,10,10,10,10,10,10})
 end
 __gfx__
 000000000aaaaaa009999990088888800eeeeee00000000000000000000000000000000000000000000000000000000000000000000000000008800000000000

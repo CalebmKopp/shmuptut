@@ -17,6 +17,8 @@ function _update()
 		update_game()
 	elseif mode=="start" then
 		update_start()
+	elseif mode=="level" then
+		update_level()
 	elseif mode=="over" then
 		update_over()
 	end
@@ -27,6 +29,8 @@ function _draw()
 		draw_game()
 	elseif mode=="start" then
 		draw_start()
+	elseif mode=="level" then
+		draw_level()
 	elseif mode=="over" then
 		draw_over()
 	end
@@ -211,6 +215,10 @@ function update_start()
 	end
 end
 
+function update_level()
+	ani_stars()
+end
+
 function update_over()
 	if btnp(4) or btnp(5) then
 		mode="start"
@@ -262,6 +270,11 @@ function draw_start()
 	cls(1)
 	print("shmuck shmup",40,40,12)
 	print("press any key to start",20,80,blink())
+end
+
+function draw_level()
+	cls(0)
+	drw_stars()
 end
 
 function draw_over()

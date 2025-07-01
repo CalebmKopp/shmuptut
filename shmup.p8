@@ -7,6 +7,8 @@ function _init()
 	cls(0)
 	t=0
 	mode="start"
+	start_levelcount()
+	start_stars()
 end
 
 function _update()
@@ -57,6 +59,14 @@ function startgame()
 	lives=3
 	bombs=2
 	
+	start_stars()
+end
+-->8
+-- helpers
+function start_levelcount()
+	curr_level=1
+end
+function start_stars()
 	starcount=184
 	starx={}
 	stary={}
@@ -68,8 +78,6 @@ function startgame()
 		add(starspd,rnd(1.5)+0.5)
 	end
 end
--->8
--- stars
 function drw_stars()
 	for i=1,starcount do
 		--default color, should never
@@ -121,7 +129,7 @@ function ani_stars()
 end
 
 function blink()
-	local blink_cols={7,7,7,7,7,7,7,7,7,7,6,6,6,6,13,13}
+	local blink_cols={7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,}
 	return blink_cols[t%#blink_cols+1]
 end	
 -->8
@@ -211,12 +219,15 @@ end
 
 function update_start()
 	if btnp(4) or btnp(5) then
-		startgame()
+		mode="level"
 	end
 end
 
 function update_level()
 	ani_stars()
+	if t>121 then
+		startgame()
+	end
 end
 
 function update_over()
@@ -275,6 +286,7 @@ end
 function draw_level()
 	cls(0)
 	drw_stars()
+	print("level: "..curr_level,45,42,blink())
 end
 
 function draw_over()

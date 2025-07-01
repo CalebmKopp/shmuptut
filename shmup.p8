@@ -6,7 +6,6 @@ function _init()
 	-- this is called once at start
 	cls(0)
 	t=0
-	levelt = 0
 	mode="start"
 	start_levelcount()
 	start_stars()
@@ -65,6 +64,7 @@ end
 -->8
 -- helpers
 function start_levelcount()
+	levelt=0
 	curr_level=1
 end
 function start_stars()
@@ -112,12 +112,13 @@ function drw_stars()
 	end
 end
 
-function ani_stars()
+function ani_stars(spd_mod)
+	spd_mod = spd_mod or 1
 	--for every star
 	for i=1,starcount do
 		local sy=stary[i]
 		--increment y coord by starspd
-		sy+=starspd[i]
+		sy+=(starspd[i]*spd_mod)
 		--if it gets too high
 		if sy>128 then
 			--subtract 128, or set 0
@@ -219,13 +220,14 @@ function update_game()
 end
 
 function update_start()
+	ani_stars(0.3)
 	if btnp(4) or btnp(5) then
 		mode="level"
 	end
 end
 
 function update_level()
-	ani_stars()
+	ani_stars(0.75)
 	levelt+=1
 	if levelt>121 then
 		startgame()
@@ -233,8 +235,11 @@ function update_level()
 end
 
 function update_over()
+	ani_stars(-0.8)
 	if btnp(4) or btnp(5) then
 		mode="start"
+		start_levelcount()
+		start_stars()
 	end
 end
 
@@ -281,6 +286,7 @@ end
 
 function draw_start()
 	cls(1)
+	drw_stars()
 	print("shmuck shmup",40,40,12)
 	print("press any key to start",20,80,blink())
 end
@@ -292,7 +298,8 @@ function draw_level()
 end
 
 function draw_over()
-	cls(8)
+	cls(15)
+	drw_stars()
 	print("game over",48,40,2)
 	print("press any key to continue",15,80,blink())
 end

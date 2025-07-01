@@ -12,6 +12,7 @@ end
 function _update()
 	-- update is for gameplay
 	--	 (hard 30 fps always)
+	t+=1
 	if mode=="game" then
 		update_game()
 	elseif mode=="start" then
@@ -114,10 +115,14 @@ function ani_stars()
 		stary[i]=sy
 	end
 end
+
+function blink()
+	local blink_cols={7,7,7,7,7,7,7,7,7,7,6,6,6,6,13,13}
+	return blink_cols[t%#blink_cols+1]
+end	
 -->8
 -- update
 function update_game()
-	t+=1
 	--controls
 	xshipspd=0
 	yshipspd=0
@@ -256,7 +261,7 @@ end
 function draw_start()
 	cls(1)
 	print("shmuck shmup",40,40,12)
-	print("press any key to start",20,80,7)
+	print("press any key to start",20,80,blink())
 end
 
 function draw_over()

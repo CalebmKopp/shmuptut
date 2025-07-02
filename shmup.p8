@@ -7,7 +7,7 @@ function _init()
 	cls(0)
 	t=0
 	mode="start"
-	start_levelcount()
+	start_trackers()
 	start_stars()
 end
 
@@ -61,8 +61,9 @@ function startgame()
 end
 -->8
 -- helpers
-function start_levelcount()
-	levelt=0
+function start_trackers()
+	level_t=0
+	over_t=0
 	curr_level=1
 end
 function start_stars()
@@ -136,7 +137,7 @@ end
 -->8
 -- update
 function update_game()
-	ani_stars()
+	ani_stars(1.4)
 	--controls
 	xshipspd=0
 	yshipspd=0
@@ -227,17 +228,17 @@ end
 
 function update_level()
 	ani_stars(0.75)
-	levelt+=1
-	if levelt>91 then
+	level_t+=1
+	if level_t>91 then
 		startgame()
 	end
 end
 
 function update_over()
-	ani_stars(-0.6)
+	ani_stars(-0.3)
 	if btnp(4) or btnp(5) then
 		mode="start"
-		start_levelcount()
+		start_trackers()
 		start_stars()
 	end
 end

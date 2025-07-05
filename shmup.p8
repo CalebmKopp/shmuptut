@@ -9,13 +9,6 @@ function _init()
 	mode="start"
 	start_trackers()
 	start_stars()
-	
-	star_red={x=40,y=60,col=8}
-	star_blu={x=50,y=80,col=12}
-	star_red=star_blu
-	star_red.y-=30
-	star_red.col=138
-	star_blu.col=138
 end
 
 function _update()
@@ -296,8 +289,6 @@ end
 
 function draw_start()
 	cls(1)
-	pset(star_red.x,star_red.y,star_red.col)
-	pset(star_blu.x,star_blu.y,star_blu.col)
 	drw_stars()
 	print("shmuck shmup",40,40,12)
 	print("press any key to start",20,80,blink())

@@ -8,7 +8,7 @@ function _init()
 	t=0
 	mode="start"
 	start_trackers()
-	start_stars()
+	init_stars()
 end
 
 function _update()
@@ -67,20 +67,10 @@ function start_trackers()
 	curr_level=1
 end
 
-function start_stars()
+function init_stars()
 	starcount=184
-	starx={}
-	stary={}
-	starspd={}
-	
-	for i=1,starcount do
-		add(starx,flr(rnd(128)))
-		add(stary,flr(rnd(128)))
-		add(starspd,rnd(1.5)+0.5)
-	end
-	
 	stars={}
-	for i=1,8 do
+	for i=1,starcount do
 		local newstar={}
 		newstar.x=flr(rnd(128))
 		newstar.y=flr(rnd(128))
@@ -90,12 +80,20 @@ function start_stars()
 		add(stars, newstar)
 	end
 end
-function calc_star_cols(star_cols)
+function calc_star_cols(star_cols,spd_breaks)
+	--this function calculates the star colors based on speed
 	--ordered from fastest to slowest, 5 values
 	--	default white,lightgrey,lightblue,blue,darkblue
 	star_cols = star_cols or {7,6,13,5,1}
+
+	--default speed breaks
+	spd_breaks = spd_breaks or {1.9600, 1.7, 1.2, 0.7}
+
+	--for every star
 	for i=1,#stars do
+		--get the star reference
 		local star_ref=stars[i]
+		--set the color based on speed
 		if star_ref.spd > 1.9600 then
 			star_ref.col=star_cols[1]
 			star_ref.fast=true
@@ -110,9 +108,11 @@ function calc_star_cols(star_cols)
 		end
 	end
 end
-function drw_star_objs(star_cols)
+function drw_stars(star_cols)
+	--calculate the star colors based on speed
 	calc_star_cols(star_cols)
-	for i=1,starcount do
+	--for every star
+	for i=1,#stars do
 		local star_ref=stars[i]
 		if star_ref.fast then
 			--draw a line
@@ -124,62 +124,24 @@ function drw_star_objs(star_cols)
 	end
 end
 
-function drw_stars(star_cols)
-	star_cols = star_cols or {7,6,13,5,1}
-	for i=1,starcount do
-		--default color, should never
-		--	be rendered
-		local scolor=8
-		local speed=starspd[i]
-		local toofast=false
-		
-		if speed > 1.9600 then
-			scolor=star_cols[1] --white
-			toofast=true
-		elseif speed > 1.7 then
-			scolor=star_cols[2] --lightgrey
-		elseif speed > 1.2 then
-			scolor=star_cols[3] --lightblue
-		elseif speed > 0.7 then
-			scolor=star_cols[4] --blue
-		else
-			scolor=star_cols[5] --dark blue
-		end
-		
-		-- if the star is too high of speed
-		--  draw a line instead of a pixel
-		if toofast then
-			-- draw a line
-			line(starx[i],stary[i],starx[i],stary[i]-3,scolor)
-		else
-			-- draw a pixel
-			pset(starx[i],stary[i],scolor)
-		end
-	end
-end
-
 function ani_stars(spd_mod)
 	spd_mod = spd_mod or 1
 	--for every star
-	for i=1,starcount do
-		local sy=stary[i]
-		--increment y coord by starspd
-		sy+=(starspd[i]*spd_mod)
-		--if it gets too high
-		if sy>128 then
-			--subtract 128, or set 0
-			sy = 0
-		end
-		--reassign to array, for draw
-		--	func to pull y coord
-		stary[i]=sy
-	end
-	
 	for i=1,#stars do
+		--get the star reference
 		local star_ref=stars[i]
+		--move the star
+		-- by adding the speed and multiplying by the speed modifier
 		star_ref.y+=(star_ref.spd*spd_mod)
+		--if the star is off the screen
 		if star_ref.y>128then
+			--reset the star to the top
 			star_ref.y=0
+		end
+		--if the star is too far off the screen
+		if star_ref.y < -3 then
+			--reset the star to the bottom
+			star_ref.y=-2
 		end
 	end
 end
@@ -293,7 +255,7 @@ function update_over()
 	if btnp(4) or btnp(5) then
 		mode="start"
 		start_trackers()
-		start_stars()
+		init_stars()
 	end
 end
 

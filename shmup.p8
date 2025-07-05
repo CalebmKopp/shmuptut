@@ -58,6 +58,8 @@ function startgame()
 	score=10000
 	lives=3
 	bombs=2
+	
+	buls={}
 end
 -->8
 -- tools
@@ -84,7 +86,7 @@ function calc_star_cols(star_cols,spd_breaks)
 	--this function calculates the star colors based on speed
 	--ordered from fastest to slowest, 5 values
 	--	default white,lightgrey,lightblue,blue,darkblue
-	star_cols = star_cols or {7,6,13,5,1}
+	star_cols = star_cols or {8,6,13,5,1}
 
 	--default speed breaks
 	spd_breaks = spd_breaks or {1.9700, 1.7, 1.2, 0.7}
@@ -115,8 +117,10 @@ function drw_stars(star_cols)
 	for i=1,#stars do
 		local star_ref=stars[i]
 		-- if star_ref.fast then
+		-- 	--draw a line
 		-- 	line(star_ref.x, star_ref.y,star_ref.x,star_ref.y-4,star_ref.col)
 		-- else
+		-- 	--draw a pixel
 		-- 	pset(star_ref.x, star_ref.y, star_ref.col)
 		-- end
 		pset(star_ref.x, star_ref.y, star_ref.col)
@@ -184,8 +188,13 @@ function update_game()
 	
 	--shoot
 	if btnp(5) then
-		bullx=xship
-		bully=yship-1
+		local newbul={
+			x=xship,
+			y=yship-1,
+			kind="std",
+			spr_ref=24
+		}
+		add(buls, newbul)
 		sfx(1)
 		muzzle=4
 	end
@@ -199,8 +208,18 @@ function update_game()
 	xship = xship + xshipspd
 	yship = yship + yshipspd
 	
-	--move the bullet
+	--move the bullets
+	for i=1,#buls do
+		local bul_ref=buls[i]
+		bul_ref.y-=bullspd
+		
+	end
 	bully=bully-bullspd
+	--change bullspr over time
+	bullspr+=1
+	if bullspr>27 then
+		bullspr=24
+	end
 	
 	--animate flame
 	boostspr+=1
@@ -211,12 +230,6 @@ function update_game()
 	--animate muzzle flash
 	if muzzle>0 then
 		muzzle-=1
-	end
-	
-	--change bullspr over time
-	bullspr+=1
-	if bullspr>27 then
-		bullspr=24
 	end
 
 	--checking if we hit edge
@@ -274,7 +287,10 @@ function draw_game()
 	
 	-- conditionally drawn
 	-- draw bullet
-	spr(bullspr, bullx, bully)
+	for i=1,#buls do
+		local bul_ref=buls[i]
+		spr(bul_ref.spr_ref, bul_ref.x, bul_ref.y)
+	end
 	if muzzle>0 then
 		circfill(xship+3,yship-2,muzzle,7)
 		circfill(xship+4,yship-2,muzzle,7)

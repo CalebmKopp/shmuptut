@@ -84,10 +84,10 @@ function calc_star_cols(star_cols,spd_breaks)
 	--this function calculates the star colors based on speed
 	--ordered from fastest to slowest, 5 values
 	--	default white,lightgrey,lightblue,blue,darkblue
-	star_cols = star_cols or {6,13,5,5,13}
+	star_cols = star_cols or {4,6,13,5,1}
 
 	--default speed breaks
-	spd_breaks = spd_breaks or {1.9600, 1.7, 1.2, 0.7}
+	spd_breaks = spd_breaks or {1.9960, 1.7, 1.2, 0.7}
 
 	--for every star
 	for i=1,#stars do

@@ -9,6 +9,9 @@ function _init()
 	mode="start"
 	start_trackers()
 	start_stars()
+	
+	star={x=40,y=60,spd=1.2}
+	
 end
 
 function _update()
@@ -66,8 +69,10 @@ function start_trackers()
 	over_t=0
 	curr_level=1
 end
+
 function start_stars()
 	starcount=184
+	
 	starx={}
 	stary={}
 	starspd={}
@@ -78,6 +83,7 @@ function start_stars()
 		add(starspd,rnd(1.5)+0.5)
 	end
 end
+
 function drw_stars(star_cols)
 	star_cols = star_cols or {7,6,13,5,1}
 	for i=1,starcount do

@@ -95,31 +95,31 @@ function calc_star_cols(star_cols)
 	--	default white,lightgrey,lightblue,blue,darkblue
 	star_cols = star_cols or {7,6,13,5,1}
 	for i=1,#stars do
-		local cur_star=stars[i]
-		if cur_star.spd > 1.9600 then
-			cur_star.col=star_cols[1]
-			cur_star.fast=true
-		elseif cur_star.spd > 1.7 then
-			cur_star.col=star_cols[2]
-		elseif cur_star.spd > 1.2 then
-			cur_star.col=star_cols[3]
-		elseif cur_star.spd > 0.7 then
-			cur_star.col=star_cols[4]
+		local star_ref=stars[i]
+		if star_ref.spd > 1.9600 then
+			star_ref.col=star_cols[1]
+			star_ref.fast=true
+		elseif star_ref.spd > 1.7 then
+			star_ref.col=star_cols[2]
+		elseif star_ref.spd > 1.2 then
+			star_ref.col=star_cols[3]
+		elseif star_ref.spd > 0.7 then
+			star_ref.col=star_cols[4]
 		else
-			cur_star.col=star_cols[5]
+			star_ref.col=star_cols[5]
 		end
 	end
 end
 function drw_star_objs(star_cols)
 	calc_star_cols(star_cols)
 	for i=1,starcount do
-		local curr_star=stars[i]
-		if curr_star.fast then
+		local star_ref=stars[i]
+		if star_ref.fast then
 			--draw a line
-			line(curr_star.x, curr_star.y,curr_star.x,curr_star.y-3,curr_star.col)
+			line(star_ref.x, star_ref.y,star_ref.x,star_ref.y-3,star_ref.col)
 		else
 			--draw a pixel
-			pset(curr_star.x, curr_star.y, curr_star.col)
+			pset(star_ref.x, star_ref.y, star_ref.col)
 		end
 	end
 end
@@ -176,10 +176,10 @@ function ani_stars(spd_mod)
 	end
 	
 	for i=1,#stars do
-		local cur_star=stars[i]
-		cur_star.y+=(cur_star.spd*spd_mod)
-		if cur_star.y>128then
-			cur_star.y=0
+		local star_ref=stars[i]
+		star_ref.y+=(star_ref.spd*spd_mod)
+		if star_ref.y>128then
+			star_ref.y=0
 		end
 	end
 end

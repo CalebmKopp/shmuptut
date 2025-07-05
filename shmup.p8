@@ -47,11 +47,8 @@ function startgame()
 	yshipspd=0
 	shipspr=36
 	boostspr=6
-	
-	bullx=-20
-	bully=-20
-	bullspd=3.5
-	bullspr=24
+	should_ani_buls=true
+	bullspd=3.5 --3.5 default
 	
 	muzzle=0
 	
@@ -63,6 +60,17 @@ function startgame()
 end
 -->8
 -- tools
+
+--todo: fix this function
+function ani_bul(bul_ref)
+	if bul_ref.kind=="std" then
+		local std_bul_frames={24,24,24,25,25,25,26,26,26,27,27,27}
+		for i=1,#std_bul_frames do
+			bul_ref.sprite=std_bul_frames[i]
+		end
+	end
+end
+
 function start_trackers()
 	level_t=0
 	over_t=0
@@ -192,7 +200,7 @@ function update_game()
 			x=xship,
 			y=yship-1,
 			kind="std",
-			spr_ref=24
+			sprite=24
 		}
 		add(buls, newbul)
 		sfx(1)
@@ -212,13 +220,10 @@ function update_game()
 	for i=1,#buls do
 		local bul_ref=buls[i]
 		bul_ref.y-=bullspd
-		
-	end
-	bully=bully-bullspd
-	--change bullspr over time
-	bullspr+=1
-	if bullspr>27 then
-		bullspr=24
+		if false then
+			--todo: fix this function
+			ani_bul(bul_ref)
+		end
 	end
 	
 	--animate flame
@@ -289,7 +294,7 @@ function draw_game()
 	-- draw bullet
 	for i=1,#buls do
 		local bul_ref=buls[i]
-		spr(bul_ref.spr_ref, bul_ref.x, bul_ref.y)
+		spr(bul_ref.sprite, bul_ref.x, bul_ref.y)
 	end
 	if muzzle>0 then
 		circfill(xship+3,yship-2,muzzle,7)

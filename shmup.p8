@@ -60,7 +60,7 @@ function startgame()
 	bombs=2
 end
 -->8
--- helpers
+-- tools
 function start_trackers()
 	level_t=0
 	over_t=0
@@ -69,7 +69,6 @@ end
 
 function start_stars()
 	starcount=184
-	
 	starx={}
 	stary={}
 	starspd={}
@@ -78,6 +77,50 @@ function start_stars()
 		add(starx,flr(rnd(128)))
 		add(stary,flr(rnd(128)))
 		add(starspd,rnd(1.5)+0.5)
+	end
+	
+	stars={}
+	for i=1,8 do
+		local newstar={}
+		newstar.x=flr(rnd(128))
+		newstar.y=flr(rnd(128))
+		newstar.spd=rnd(1.5)+0.5
+		newstar.col=8 --red
+		newstar.fast=false
+		add(stars, newstar)
+	end
+end
+function calc_star_cols(star_cols)
+	--ordered from fastest to slowest, 5 values
+	--	default white,lightgrey,lightblue,blue,darkblue
+	star_cols = star_cols or {7,6,13,5,1}
+	for i=1,#stars do
+		local cur_star=stars[i]
+		if cur_star.spd > 1.9600 then
+			cur_star.col=star_cols[1]
+			cur_star.fast=true
+		elseif cur_star.spd > 1.7 then
+			cur_star.col=star_cols[2]
+		elseif cur_star.spd > 1.2 then
+			cur_star.col=star_cols[3]
+		elseif cur_star.spd > 0.7 then
+			cur_star.col=star_cols[4]
+		else
+			cur_star.col=star_cols[5]
+		end
+	end
+end
+function drw_star_objs(star_cols)
+	calc_star_cols(star_cols)
+	for i=1,starcount do
+		local curr_star=stars[i]
+		if curr_star.fast then
+			--draw a line
+			line(curr_star.x, curr_star.y,curr_star.x,curr_star.y-3,curr_star.col)
+		else
+			--draw a pixel
+			pset(curr_star.x, curr_star.y, curr_star.col)
+		end
 	end
 end
 
@@ -130,6 +173,14 @@ function ani_stars(spd_mod)
 		--reassign to array, for draw
 		--	func to pull y coord
 		stary[i]=sy
+	end
+	
+	for i=1,#stars do
+		local cur_star=stars[i]
+		cur_star.y+=(cur_star.spd*spd_mod)
+		if cur_star.y>128then
+			cur_star.y=0
+		end
 	end
 end
 

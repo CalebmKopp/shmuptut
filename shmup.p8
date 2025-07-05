@@ -84,7 +84,7 @@ function calc_star_cols(star_cols,spd_breaks)
 	--this function calculates the star colors based on speed
 	--ordered from fastest to slowest, 5 values
 	--	default white,lightgrey,lightblue,blue,darkblue
-	star_cols = star_cols or {7,6,13,5,1}
+	star_cols = star_cols or {6,13,5,5,13}
 
 	--default speed breaks
 	spd_breaks = spd_breaks or {1.9600, 1.7, 1.2, 0.7}
@@ -94,14 +94,14 @@ function calc_star_cols(star_cols,spd_breaks)
 		--get the star reference
 		local star_ref=stars[i]
 		--set the color based on speed
-		if star_ref.spd > 1.9600 then
+		if star_ref.spd > spd_breaks[1] then
 			star_ref.col=star_cols[1]
 			star_ref.fast=true
-		elseif star_ref.spd > 1.7 then
+		elseif star_ref.spd > spd_breaks[2] then
 			star_ref.col=star_cols[2]
-		elseif star_ref.spd > 1.2 then
+		elseif star_ref.spd > spd_breaks[3] then
 			star_ref.col=star_cols[3]
-		elseif star_ref.spd > 0.7 then
+		elseif star_ref.spd > spd_breaks[4] then
 			star_ref.col=star_cols[4]
 		else
 			star_ref.col=star_cols[5]
@@ -116,7 +116,7 @@ function drw_stars(star_cols)
 		local star_ref=stars[i]
 		if star_ref.fast then
 			--draw a line
-			line(star_ref.x, star_ref.y,star_ref.x,star_ref.y-3,star_ref.col)
+			line(star_ref.x, star_ref.y,star_ref.x,star_ref.y-4,star_ref.col)
 		else
 			--draw a pixel
 			pset(star_ref.x, star_ref.y, star_ref.col)
